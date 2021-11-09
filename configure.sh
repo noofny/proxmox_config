@@ -1,21 +1,42 @@
 #!/bin/bash
 
 
+# TODO: make this script idempotent!
+# TODO: migrate all this to ansible
+
+
 echo "Configure : begin"
+
+
+# bash profile
+echo "Configuring bash profile..."
+echo "alias ls='ls -lha'" >> ~/.bashrc
+source ~/.bashrc
+
+
+# community distros
+echo "Adding community distos..."
+cat <<EOF > /etc/apt/sources.list
+# Not for production use
+deb http://download.proxmox.com/debian buster pve-no-subscription
+EOF
+cd /etc/apt/sources.list.d
+cp pve-enterprise.list pve-enterprise.list.bak
+# TODO - use sed for this
+nano pve-enterprise.list
 
 
 # patch
 echo "Patching..."
-apt update && apt upgrade -y
+apt update && apt dist-upgrade -y
 
 
 # packages
+# TODO: include other packages like htop / net-tools
 echo "Installing packages..."
 apt update && apt install -y \
     curl \
-    wget \
-    htop \
-    net-tools \
+    wget
 
 
 # ssh/user
@@ -37,4 +58,10 @@ sed -i -e 's/#PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/ss
 systemctl restart ssh
 
 
+# dark theme
+echo "Installing dark UI theme..."
+bash <(curl -s https://raw.githubusercontent.com/Weilbyte/PVEDiscordDark/master/PVEDiscordDark.sh ) install
+
+
+echo "Setup complete - you can access the console at https://$(hostname -I):8006/"
 echo "Configure : script complete!"
