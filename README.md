@@ -10,3 +10,4 @@ Scripts to automate configuration of a [ProxMox](https://www.proxmox.com/en/) ho
 
 - [Proxmox 101](https://medium.com/devops-dudes/proxmox-101-8204eb154cd5)
 - [Rename Proxmox node with existing VMs](https://base64.co.za/rename-proxmox-node-with-existing-vms/)
+- [mount: unknown filesystem type ‘zfs_member’](https://www.svennd.be/mount-unknown-filesystem-type-zfs_member/)
