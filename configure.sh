@@ -8,6 +8,11 @@
 echo "Configure : begin"
 
 
+# timezone
+echo "Setting timezone..."
+timedatectl set-timezone Australia/Sydney
+
+
 # bash profile
 echo "Configuring bash profile..."
 echo "alias ls='ls -lha'" >> ~/.bashrc
