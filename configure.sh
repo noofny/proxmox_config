@@ -28,6 +28,7 @@ EOF
 cd /etc/apt/sources.list.d
 cp pve-enterprise.list pve-enterprise.list.bak
 # TODO - use sed for this
+#        For now - manually coment out any entries in this referencing "enterprise"
 nano pve-enterprise.list
 
 
