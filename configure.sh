@@ -29,6 +29,25 @@ cd /etc/apt/sources.list.d
 cp pve-enterprise.list pve-enterprise.list.bak
 # TODO - use sed for this
 #        For now - manually coment out any entries in this referencing "enterprise"
+#
+#        it may end up looking something like this...
+#
+#  #-----------------------------------------------------------------
+#  # Proxmox VE No-Subscription Repository
+#  # This is the recommended repository for testing and non-production use.
+#  # Its packages are not as heavily tested and validated.
+#  # You don’t need a subscription key to access the pve-no-subscription repository.
+#  
+#  deb http://ftp.debian.org/debian bullseye main contrib
+#  deb http://ftp.debian.org/debian bullseye-updates main contrib
+#  
+#  # PVE pve-no-subscription repository provided by proxmox.com,
+#  # NOT recommended for production use
+#  deb http://download.proxmox.com/debian/pve bullseye pve-no-subscription
+#  
+#  # security updates
+#  deb http://security.debian.org/debian-security bullseye-security main contrib
+#
 nano pve-enterprise.list
 
 
