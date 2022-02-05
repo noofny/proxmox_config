@@ -63,7 +63,8 @@ apt update && apt install -y \
     curl \
     wget \
     ethtool \
-    htop
+    htop \
+    xsensors
 
 
 # ssh/user
