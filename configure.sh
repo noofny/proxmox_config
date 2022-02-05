@@ -61,7 +61,9 @@ apt update && apt dist-upgrade -y
 echo "Installing packages..."
 apt update && apt install -y \
     curl \
-    wget
+    wget \
+    ethtool \
+    htop
 
 
 # ssh/user
