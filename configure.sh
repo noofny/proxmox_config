@@ -94,7 +94,8 @@ bash <(curl -s https://raw.githubusercontent.com/Weilbyte/PVEDiscordDark/master/
 # scripts
 echo "Creating scripts..."
 SCRIPT_FILENAME='/root/kill_vm.sh'
-cat << EOF > ${SCRIPT_FILENAME}
+rm -f ${SCRIPT_FILENAME}
+cat << 'EOF' > ${SCRIPT_FILENAME}
 #!/bin/bash
 VM_ID=$1
 PROCESS_ID=$(ps -ef | grep "/usr/bin/kvm -id ${VM_ID}" | awk '{print $2}')
@@ -102,7 +103,7 @@ echo "Killing VM_ID=${VM_ID} PROCESS_ID=${PROCESS_ID}"
 kill -9 ${PROCESS_ID}
 qm stop ${VM_ID}
 echo "done!"
-EOM
+EOF
 chmod +x ${SCRIPT_FILENAME}
 
 
