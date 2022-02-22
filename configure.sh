@@ -92,28 +92,14 @@ bash <(curl -s https://raw.githubusercontent.com/Weilbyte/PVEDiscordDark/master/
 
 
 # scripts
-echo "Creating scripts..."
-SCRIPT_FILENAME='/root/kill_vm.sh'
-rm -f ${SCRIPT_FILENAME}
-cat << 'EOF' > ${SCRIPT_FILENAME}
-#!/bin/bash
-VM_ID=$1
-PROCESS_ID=$(ps -ef | grep "/usr/bin/kvm -id ${VM_ID}" | awk '{print $2}')
-echo "Killing VM_ID=${VM_ID} PROCESS_ID=${PROCESS_ID}"
-kill -9 ${PROCESS_ID}
-qm stop ${VM_ID}
-echo "done!"
-EOF
-chmod +x ${SCRIPT_FILENAME}
-SCRIPT_FILENAME='/root/push_backups_to_remote.sh'
-rm -f ${SCRIPT_FILENAME}
-cat << 'EOF' > ${SCRIPT_FILENAME}
-#!/bin/bash
-mount -a
-rsync -r -h --progress --ignore-existing /mnt/pve/backup/ /mnt/proxmox
-echo "done!"
-EOF
-chmod +x ${SCRIPT_FILENAME}
+echo "Pulling scripts..."
+cd /root
+wget https://raw.githubusercontent.com/noofny/proxmox_config/master/fix_ssh.sh
+chmod +x ./fix_ssh.sh
+https://raw.githubusercontent.com/noofny/proxmox_config/master/kill_vm.sh
+chmod +x ./kill_vm.sh
+https://raw.githubusercontent.com/noofny/proxmox_config/master/push_backups_to_remote.sh
+chmod +x ./push_backups_to_remote.sh
 
 
 # pci-passthrough
