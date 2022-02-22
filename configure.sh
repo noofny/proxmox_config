@@ -119,6 +119,22 @@ echo "vfio_virqfd"
 echo '"options vfio_iommu_type1 allow_unsafe_interrupts=1" > /etc/modprobe.d/iommu_unsafe_interrupts.conf'
 
 
+# misc
+echo "You may want the following to assist with SMB..."
+echo ""
+echo "nano ~/.smbcreds"
+echo "username=YOUR_USER"
+echo "password=YOUR_PASS"
+echo ""
+echo "chmod 600 ~/.smbcreds"
+echo ""
+echo "nano /etc/hosts"
+echo "192.168.0.12 backup-1.local backup-1.home backup-1"
+echo ""
+echo "nano /etc/fstab"
+echo "//backup-1/some_share /mnt/some_share   cifs    ip=192.168.0.12,uid=0,credentials=/root/.smbcreds,iocharset=utf8,vers=3.0,noperm 0 0"
+echo ""
+
 
 echo "Setup complete - you can access the console at https://$(hostname -I):8006/"
 echo "Configure : script complete!"
