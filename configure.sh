@@ -5,21 +5,25 @@
 # TODO: migrate all this to ansible
 
 
+echo ""
 echo "Configure : begin"
 
 
 # timezone
+echo ""
 echo "Setting timezone..."
 timedatectl set-timezone Australia/Sydney
 
 
 # bash profile
+echo ""
 echo "Configuring bash profile..."
 echo "alias ls='ls -lha'" >> ~/.bashrc
 source ~/.bashrc
 
 
 # community distros
+echo ""
 echo "Adding community distos..."
 cat <<EOF > /etc/apt/sources.list
 # Not for production use
@@ -52,12 +56,14 @@ nano pve-enterprise.list
 
 
 # patch
+echo ""
 echo "Patching..."
 apt update && apt dist-upgrade -y
 
 
 # packages
 # TODO: include other packages like htop / net-tools
+echo ""
 echo "Installing packages..."
 apt update && apt install -y \
     curl \
@@ -68,6 +74,7 @@ apt update && apt install -y \
 
 
 # ssh/user
+echo ""
 echo "Configuring SSH and user access..."
 SSH_USER=admin
 adduser --gecos "" ${SSH_USER}
@@ -87,26 +94,30 @@ systemctl restart ssh
 
 
 # dark theme
+echo ""
 echo "Installing dark UI theme..."
 bash <(curl -s https://raw.githubusercontent.com/Weilbyte/PVEDiscordDark/master/PVEDiscordDark.sh ) install
 
 
 # scripts
+echo ""
 echo "Pulling scripts..."
 cd /root
 wget https://raw.githubusercontent.com/noofny/proxmox_config/master/fix_ssh.sh
 chmod +x ./fix_ssh.sh
-https://raw.githubusercontent.com/noofny/proxmox_config/master/kill_vm.sh
+wget https://raw.githubusercontent.com/noofny/proxmox_config/master/kill_vm.sh
 chmod +x ./kill_vm.sh
-https://raw.githubusercontent.com/noofny/proxmox_config/master/push_backups_to_remote.sh
+wget https://raw.githubusercontent.com/noofny/proxmox_config/master/push_backups_to_remote.sh
 chmod +x ./push_backups_to_remote.sh
 
 
 # pci-passthrough
+echo ""
 echo "For PCIe Passthrough (https://pve.proxmox.com/wiki/Pci_passthrough)..."
 echo ""
 echo "nano /etc/default/grub"
 echo 'GRUB_CMDLINE_LINUX_DEFAULT="quiet intel_iommu=on iommu=pt"'
+echo 'update-grub'
 echo ""
 echo "nano /etc/modules"
 echo "vfio"
@@ -118,6 +129,7 @@ echo 'echo "options vfio_iommu_type1 allow_unsafe_interrupts=1" > /etc/modprobe.
 
 
 # misc
+echo ""
 echo "You may want the following to assist with SMB..."
 echo ""
 echo "nano ~/.smbcreds"
@@ -134,5 +146,6 @@ echo "//backup-1/some_share /mnt/some_share   cifs    ip=192.168.0.12,uid=0,cred
 echo ""
 
 
+echo ""
 echo "Setup complete - you can access the console at https://$(hostname -I):8006/"
 echo "Configure : script complete!"
