@@ -105,6 +105,15 @@ qm stop ${VM_ID}
 echo "done!"
 EOF
 chmod +x ${SCRIPT_FILENAME}
+SCRIPT_FILENAME='/root/push_backups_to_remote.sh'
+rm -f ${SCRIPT_FILENAME}
+cat << 'EOF' > ${SCRIPT_FILENAME}
+#!/bin/bash
+mount -a
+rsync -r -h --progress --ignore-existing /mnt/pve/backup/ /mnt/proxmox
+echo "done!"
+EOF
+chmod +x ${SCRIPT_FILENAME}
 
 
 # pci-passthrough
