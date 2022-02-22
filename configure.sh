@@ -109,14 +109,17 @@ chmod +x ${SCRIPT_FILENAME}
 
 # pci-passthrough
 echo "For PCIe Passthrough (https://pve.proxmox.com/wiki/Pci_passthrough)..."
+echo ""
 echo "nano /etc/default/grub"
 echo 'GRUB_CMDLINE_LINUX_DEFAULT="quiet intel_iommu=on iommu=pt"'
+echo ""
 echo "nano /etc/modules"
 echo "vfio"
 echo "vfio_iommu_type1"
 echo "vfio_pci"
 echo "vfio_virqfd"
-echo '"options vfio_iommu_type1 allow_unsafe_interrupts=1" > /etc/modprobe.d/iommu_unsafe_interrupts.conf'
+echo ""
+echo 'echo "options vfio_iommu_type1 allow_unsafe_interrupts=1" > /etc/modprobe.d/iommu_unsafe_interrupts.conf'
 
 
 # misc
