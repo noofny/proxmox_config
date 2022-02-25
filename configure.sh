@@ -128,6 +128,14 @@ echo ""
 echo 'echo "options vfio_iommu_type1 allow_unsafe_interrupts=1" > /etc/modprobe.d/iommu_unsafe_interrupts.conf'
 
 
+# zfs
+echo ""
+echo "Copying ZFS config..."
+echo "(see https://pve.proxmox.com/wiki/ZFS:_Tips_and_Tricks)"
+wget https://raw.githubusercontent.com/noofny/proxmox_config/master/zfs.conf
+cp zfs.conf /etc/modprobe.d/zfs.conf
+
+
 # misc
 echo ""
 echo "You may want the following to assist with SMB..."
