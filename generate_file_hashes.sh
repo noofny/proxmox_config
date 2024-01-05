@@ -77,7 +77,7 @@ execute_action() {
         echo "No '${action}' items were actioned for : ${TARGET_FOLDER}"
         return
     fi
-    # for target_file in $(find ${target_folder_path} ${file_type_filter} -type f)
+    TOTAL_TARGET_ITEMS=0
     find ${target_folder_path} ${file_type_filter} -type f | while read target_file
     do
         if [[ "${action}" == "create_missing_hash_file" && "${target_file}" =~ (\/(${HASH_FILE_FOLDER}|.git|.hidden)\/|(.DS_Store))+ ]];
@@ -86,13 +86,12 @@ execute_action() {
         fi
         echo "target_file=$target_file"
         $1 "${target_file}"
+        ((TOTAL_TARGET_ITEMS=TOTAL_TARGET_ITEMS+1))
     done
+    echo "${TOTAL_ACTION_ITEMS}/${TOTAL_TARGET_ITEMS} '${action}' items were actioned for : ${TARGET_FOLDER}"
     TOTAL_ACTION_ITEMS=${#ACTION_ITEMS[@]}
-    if [ $TOTAL_ACTION_ITEMS == 0 ];
+    if [ $TOTAL_ACTION_ITEMS > 0 ];
     then
-        echo "No '${action}' items were actioned for : ${TARGET_FOLDER}"
-    else
-        echo "${TOTAL_ACTION_ITEMS} '${action}' items were actioned for : ${TARGET_FOLDER}"
         (IFS=$'\n'; echo "${ACTION_ITEMS[*]}")
     fi
 }
