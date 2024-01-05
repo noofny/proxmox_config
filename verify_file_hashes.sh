@@ -31,7 +31,7 @@ TOTAL_VERIFIED_ITEMS=0
 FAILED_FILE_PATHS=()
 for target_file in $(find ${TARGET_FOLDER} -type f)
 do
-    if [[ $target_file =~ (\/(.git|.hidden)\/|($HASH_FILE_EXTENSION))+ ]];
+    if [[ $target_file =~ (\/(.git|.hidden)\/|($HASH_FILE_EXTENSION)|(.DS_Store))+ ]];
     then
         continue
     fi
