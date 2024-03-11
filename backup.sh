@@ -41,3 +41,5 @@ log "Pushing VM backups to remote..."
 rsync -r -h --progress --ignore-existing /local-zfs/backup/ "${REMOTE_PATH}"
 rsync -r -h --progress --ignore-existing /var/lib/vz/ "${REMOTE_PATH}"
 log "Pushed VM backups to remote"
+
+log "Backup completed"

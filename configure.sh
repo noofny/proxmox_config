@@ -1,8 +1,9 @@
 #!/bin/bash
 
 
-# TODO: make this script idempotent!
 # TODO: migrate all this to ansible
+#       ...or at least...
+# TODO: make this script idempotent!
 
 
 echo ""
@@ -20,45 +21,6 @@ echo ""
 echo "Configuring bash profile..."
 echo "alias ls='ls -lha'" >> ~/.bashrc
 source ~/.bashrc
-
-
-# community distros
-echo ""
-echo "Adding community distos..."
-cat <<EOF > /etc/apt/sources.list
-# Not for production use
-deb http://download.proxmox.com/debian buster pve-no-subscription
-EOF
-cd /etc/apt/sources.list.d
-cp pve-enterprise.list pve-enterprise.list.bak
-# TODO - use sed for this
-#        For now - manually coment out any entries in this referencing "enterprise"
-#
-#        it may end up looking something like this...
-#
-#  #-----------------------------------------------------------------
-#  # Proxmox VE No-Subscription Repository
-#  # This is the recommended repository for testing and non-production use.
-#  # Its packages are not as heavily tested and validated.
-#  # You don’t need a subscription key to access the pve-no-subscription repository.
-#  
-#  deb http://ftp.debian.org/debian bullseye main contrib
-#  deb http://ftp.debian.org/debian bullseye-updates main contrib
-#  
-#  # PVE pve-no-subscription repository provided by proxmox.com,
-#  # NOT recommended for production use
-#  deb http://download.proxmox.com/debian/pve bullseye pve-no-subscription
-#  
-#  # security updates
-#  deb http://security.debian.org/debian-security bullseye-security main contrib
-#
-nano pve-enterprise.list
-
-
-# patch
-echo ""
-echo "Patching..."
-apt update && apt dist-upgrade -y
 
 
 # packages
@@ -93,12 +55,6 @@ sed -i -e 's/#PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/ss
 systemctl restart ssh
 
 
-# dark theme
-echo ""
-echo "Installing dark UI theme..."
-bash <(curl -s https://raw.githubusercontent.com/Weilbyte/PVEDiscordDark/master/PVEDiscordDark.sh ) install
-
-
 # scripts
 echo ""
 echo "Pulling scripts..."
@@ -107,8 +63,8 @@ wget https://raw.githubusercontent.com/noofny/proxmox_config/master/fix_ssh.sh
 chmod +x ./fix_ssh.sh
 wget https://raw.githubusercontent.com/noofny/proxmox_config/master/kill_vm.sh
 chmod +x ./kill_vm.sh
-wget https://raw.githubusercontent.com/noofny/proxmox_config/master/push_backups_to_remote.sh
-chmod +x ./push_backups_to_remote.sh
+wget https://raw.githubusercontent.com/noofny/proxmox_config/master/backup.sh
+chmod +x ./backup.sh
 
 
 # pci-passthrough
