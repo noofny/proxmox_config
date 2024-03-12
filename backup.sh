@@ -3,6 +3,7 @@
 
 TIMESTAMP=$(date +%Y%m%d%H%M%S)
 HOSTNAME=$(hostname)
+LOCAL_PATH="/mnt/pve/ceph-fs-1"
 REMOTE_PATH="/mnt/pve/remote"
 
 
@@ -12,34 +13,23 @@ log() {
 
 
 log "Backup starting..."
-
 mount -a
-cd /root
-
-# NOTE: Node backup contains keys so we only do this manually.
-# NODE_BACKUP_FILENAME="backup_${HOSTNAME}_${TIMESTAMP}.tar.gz"
-# log "Creating NODE backup: ${NODE_BACKUP_FILENAME}..."
-# mkdir -p /etc/pve/backups_from_elsewhere/root
-# mkdir -p /etc/pve/backups_from_elsewhere/etc
-# mkdir -p /etc/pve/backups_from_elsewhere/etc/kernel
-# mkdir -p /etc/pve/backups_from_elsewhere/etc/modprobe.d
-# cp /root/*.* /etc/pve/backups_from_elsewhere/root/
-# cp /etc/hosts /etc/pve/backups_from_elsewhere/etc/hosts
-# cp /etc/fstab /etc/pve/backups_from_elsewhere/etc/fstab
-# cp /etc/kernel/cmdline /etc/pve/backups_from_elsewhere/etc/kernel/cmdline
-# cp /etc/modules /etc/pve/backups_from_elsewhere/etc/modules
-# cp /etc/default/grub /etc/pve/backups_from_elsewhere/etc/grub
-# cp /etc/modprobe.d/iommu_unsafe_interrupts.conf /etc/pve/backups_from_elsewhere/etc/modprobe.d/iommu_unsafe_interrupts.conf
-# crontab -l > /etc/pve/backups_from_elsewhere/etc/crontab.txt
-# ip address > /etc/pve/backups_from_elsewhere/ip_address.txt
-# tar -zcvf "${NODE_BACKUP_FILENAME}" /etc/pve/
-# log "Pushing NODE backup to remote: ${NODE_BACKUP_FILENAME}"
-# mv "${NODE_BACKUP_FILENAME}" "${REMOTE_PATH}/node_backups/${NODE_BACKUP_FILENAME}"
-# find "${REMOTE_PATH}/node_backups/" -mindepth 1 -mtime +7 -delete
-
-log "Pushing VM backups to remote..."
-rsync -r -h --progress --ignore-existing /local-zfs/backup/ "${REMOTE_PATH}"
-rsync -r -h --progress --ignore-existing /var/lib/vz/ "${REMOTE_PATH}"
-log "Pushed VM backups to remote"
-
+NODE_BACKUP_BASE_FOLDER="${LOCAL_PATH}/node_backup"
+NODE_BACKUP_FOLDER="${NODE_BACKUP_BASE_FOLDER}/${HOSTNAME}_${TIMESTAMP}"
+log "Creating NODE backup: ${NODE_BACKUP_FOLDER}..."
+rm -rf "${NODE_BACKUP_BASE_FOLDER}" > /dev/null
+mkdir -p "${NODE_BACKUP_FOLDER}/etc"
+mkdir -p "${NODE_BACKUP_FOLDER}/etc/kernel"
+mkdir -p "${NODE_BACKUP_FOLDER}/etc/modprobe.d"
+cp /etc/hosts "${NODE_BACKUP_FOLDER}/etc/hosts"
+cp /etc/fstab "${NODE_BACKUP_FOLDER}/etc/fstab"
+cp /etc/kernel/cmdline "${NODE_BACKUP_FOLDER}/etc/kernel/cmdline"
+cp /etc/modules "${NODE_BACKUP_FOLDER}/etc/modules"
+cp /etc/default/grub "${NODE_BACKUP_FOLDER}/etc/grub"
+cp /etc/modprobe.d/*.* "${NODE_BACKUP_FOLDER}/etc/modprobe.d/"
+crontab -l > "${NODE_BACKUP_FOLDER}/etc/crontab.txt"
+ip address > "${NODE_BACKUP_FOLDER}/ip_address.txt"
+log "Pushing to remote..."
+rsync -r -h --progress --ignore-existing "${LOCAL_PATH}/" "${REMOTE_PATH}"
+find "${REMOTE_PATH}/node_backup/" -mindepth 1 -mtime +7 -delete
 log "Backup completed"
