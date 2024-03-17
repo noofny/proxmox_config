@@ -110,6 +110,30 @@ echo "//backup-1/some_share /mnt/some_share   cifs    ip=192.168.0.12,uid=0,cred
 echo ""
 
 
+# cockpit
+apt update && apt install cockpit -y
+sed -i 's/^root/# root/g' /etc/cockpit/disallowed-users
+# NOTE: fix for networking...https://cockpit-project.org/faq#error-message-about-being-offline
+wget https://raw.githubusercontent.com/noofny/proxmox_config/master/10-globally-managed-devices.conf
+cp 10-globally-managed-devices.conf /etc/NetworkManager/conf.d/10-globally-managed-devices.conf
+nmcli con add type dummy con-name fake ifname fake0 ip4 1.2.3.4/24 gw4 1.2.3.1
+# plugin - identities
+curl -LO https://github.com/45Drives/cockpit-identities/releases/download/v0.1.12/cockpit-identities_0.1.12-1focal_all.deb
+apt install ./cockpit-identities_0.1.12-1focal_all.deb -y
+# plugin - filesharing
+curl -LO https://github.com/45Drives/cockpit-file-sharing/releases/download/v3.2.9/cockpit-file-sharing_3.2.9-2focal_all.deb
+apt install ./cockpit-file-sharing_3.2.9-2focal_all.deb -y
+# plugin - navigator
+wget -qO - https://repo.45drives.com/key/gpg.asc | gpg --dearmor -o /usr/share/keyrings/45drives-archive-keyring.gpg
+curl -sSL https://repo.45drives.com/lists/45drives.sources -o /etc/apt/sources.list.d/45drives.sources
+apt update && apt install cockpit-navigator -y
+
+
+
+# reboot
+reboot now
+
+
 echo ""
 echo "Setup complete - you can access the console at https://$(hostname -I):8006/"
 echo "Configure : script complete!"
